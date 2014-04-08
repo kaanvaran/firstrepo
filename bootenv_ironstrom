@@ -1,0 +1,31 @@
+Overo # printenv
+baudrate=115200
+bootdelay=5
+bootscript=echo Running bootscript from mmc ...; source ${loadaddr}
+defaultdisplay=dvi
+dieid#=05b000029ff800000158eb981902200d
+dvimode=1024x768MR-16@60
+ethact=smc911x-0
+loadaddr=0x82000000
+loadbootscript=fatload mmc ${mmcdev} ${loadaddr} boot.scr
+loaduimage=fatload mmc ${mmcdev} ${loadaddr} uImage
+mmcargs=setenv bootargs console=${console} ${mem} mpurate=${mpurate} vram=${vram} omapfb.mode=dvi:${dvimode} omapfb.debug=y omapdss.def_disp=${defaultdisplay} root=${mmcroot} rootfstype=${mmcrootfstype}
+mmcboot=echo Booting from mmc ...; run mmcargs; bootm ${loadaddr}
+mmcroot=/dev/mmcblk0p2 rw
+mmcrootfstype=ext3 rootwait
+mpurate=720
+nandargs=setenv bootargs console=${console} mpurate=${mpurate} vram=${vram} omapfb.mode=dvi:${dvimode} omapdss.def_disp=${defaultdisplay} root=${nandroot} rootfstype=${nandrootfstype}
+nandboot=echo Booting from nand ...; run nandargs; nand read ${loadaddr} 280000 400000; bootm ${loadaddr}
+nandroot=ubi0:rootfs ubi.mtd=4
+nandrootfstype=ubifs
+vram=12M
+mmcdev=1
+bootcmd=if mmc init ${mmcdev}; then if run loadbootscript; then run bootscript; else if run loaduimage; then run mmcboot; else run nandboot; fi; fi; else run nandboot;fi
+i2cbus=3,100
+console=ttyS2,115200n8
+mem=mem=55M@0x80000000 mem=96M@0x88000000 mem=256M@0x90000000
+bootargs=console=ttyS2,115200n8 mem=55M@0x80000000 mem=96M@0x88000000 mem=256M@0x90000000 mpurate=720 vram=12M omapfb.mode=dvi:1024x768MR-16@60 omapfb.debug=y omapdss.def_disp=dvi root=/dev/mmcblk0p2 rw rootfstype
+=ext3 rootwait
+stdin=serial
+stdout=serial
+stderr=serial
